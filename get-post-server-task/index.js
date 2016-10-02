@@ -30,14 +30,20 @@
 
 'use strict';
 
-let url = require('url');
+const url = require('url');
+const http = require('http');
+const methods = require('./methods');
+const sendError = require('./error');
 
-let methods = require('./methods');
-let sendError = require('./error');
-
-require('http').createServer(function(req, res) {
+module.exports = http.createServer((req, res) => {
 
   let pathname = decodeURI(url.parse(req.url).pathname);
+  let filename = pathname.slice(1);
+
+  if (filename.includes('/') || filename.includes('..')) {
+    sendError(res, 400, 'Nested paths are not allowed');
+    return;
+  }
 
   if (methods[req.method]) {
     methods[req.method](pathname, res, req);
