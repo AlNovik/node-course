@@ -29,7 +29,7 @@ users
         this.body = this.userById.toObject();
     })
     .post('/', function*() {
-        let user = yield User.create(pick(this.request.body, User.publicFields));
+        let user = yield User.create(pick(this.request.body, User.publicFields.concat('password')));
         this.status = 201;
         this.body = user.toObject();
     })

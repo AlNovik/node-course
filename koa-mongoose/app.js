@@ -6,12 +6,14 @@ const fs = require('fs');
 const api = require('./api');
 const routes = require('./routes');
 
+require('trace');
+require('clarify');
+
 require('koa-csrf')(app);
 
 let middlewares = fs.readdirSync(path.join(__dirname, 'middlewares')).sort();
 
 middlewares.forEach(middleware => {
-    console.log(middleware);
     app.use(require(`./middlewares/${middleware}`));
 });
 

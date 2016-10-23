@@ -1,6 +1,5 @@
 const pick = require('lodash/pick');
-const crypto = require('crypto');
-const config = require('config');
+const passwordUtils = require('../libs/passwordUtils');
 
 const publicFields = ['email', 'displayName'];
 
@@ -43,38 +42,30 @@ module.exports = mongoose => {
     UserSchema.statics.publicFields = publicFields;
 
     UserSchema.virtual('password')
-        .set(password => {
-            if (password && password.length > 4) {
+        .set(function(password) {
+            if (password && password.length < 4) {
                 this.invalidate('password', 'Пароль должен быть минимум 4 символа');
             }
 
             this._plainPassword = password;
 
             if (password) {
-                this.salt = crypto.randomBytes(config.crypto.hash.length);
-                this.passwordHash = crypto.pbkdf2Sync(
-                    password,
-                    this.salt,
-                    config.crypto.hash.iterations,
-                    config.crypto.hash.length,
-                    'sha1');
+                this.salt = passwordUtils.generateSalt();
+                this.passwordHash = passwordUtils.hashPassword(password, this.salt);
             } else {
                 this.salt = undefined;
                 this.passwordHash = undefined;
             }
         })
-        .get(() => this._plainPassword);
+        .get(function() {
+            return this._plainPassword
+        });
 
-    UserSchema.methods.checkPassword = password => {
+    UserSchema.methods.checkPassword = function(password) {
         if (!password) return false;
         if (!this.passwordHash) return false;
 
-        return crypto.pbkdf2Sync(
-            password,
-            this.salt,
-            config.crypto.hash.iterations,
-            config.crypto.hash.length,
-            'sha1') === this.passwordHash;
+        return passwordUtils.hashPassword(password, this.salt) === this.passwordHash;
     };
 
     return mongoose.model('User', UserSchema);
