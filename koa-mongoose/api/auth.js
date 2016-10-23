@@ -6,19 +6,18 @@ const authRouter = new Router();
 authRouter
     .post('/registration', function*() {
     })
-    .post('/login', function*() {
-        yield passport.authenticate('local', {
-            successRedirect: '/',
-            failureRedirect: '/',
-            //failureMessage: true // запишет сообщение об ошибке в session.messages[]
-            failureFlash: true // req.flash, better
-
-            // assignProperty: 'something' присвоить юзера в свойство req.something
-            //   - нужно для привязывания акков соц. сетей
-            // если не стоит, то залогинит его вызовом req.login(user),
-            //   - это поместит user.id в session.passport.user (если не стоит опция session:false)
-            //   - также присвоит его в req.user
-        });
+    .post('/login', function*(next) {
+        let ctx = this;
+        yield passport.authenticate('local', function*(err, user, info) {
+            if (err) throw err;
+            if (user === false) {
+                ctx.status = 401;
+                ctx.body = { success: false }
+            } else {
+                yield ctx.login(user);
+                ctx.body = { success: true }
+            }
+        }).call(this, next)
     })
     .post('/logout', function*() {
         this.logout();

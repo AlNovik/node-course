@@ -2,11 +2,10 @@
     $('[type=submit]').on('click', () => {
         $.ajax({
             method: 'POST',
-            url: '/api/login',
+            url: '/api/logout',
             contentType: 'application/json',
             data: JSON.stringify({
-                email: $('input[name=email]').val(),
-                password: $('input[name=password]').val()
+                _csrf: $('input[name=_csrf]').val()
             })
         }).then(resp => {
             location.reload();

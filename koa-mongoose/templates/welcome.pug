@@ -6,6 +6,8 @@ block content
 
   p You are logged in.
 
-  form(action="/logout" method="post")
+  div
     input(type="hidden" name="_csrf" value=csrf())
     button.btn.btn-primary(type="submit") Logout
+
+  script(src="js/welcome.js")
