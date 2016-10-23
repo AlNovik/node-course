@@ -24,10 +24,12 @@ module.exports = function*(next) {
                 this.body = e.message;
             }
             this.status = e.status;
+        } else if (e.name === 'ValidationError') {
+            this.status = 400;
+            this.body = handlers['400'](e);
         } else {
             this.body = 'Error 500';
             this.status = 500;
         }
-
     }
 };
