@@ -17,6 +17,7 @@ module.exports = function*(next) {
     try {
         yield* next;
     } catch (e) {
+        console.log(e);
         if (e.status) {
             if (handlers[e.status]) {
                 this.body = handlers[e.status](e);

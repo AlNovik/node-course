@@ -1,16 +1,21 @@
 const koa = require('koa');
 const app = koa();
-const logger = require('koa-logger');
-const bodyParser = require('koa-bodyparser');
 
-const errorHandler = require('./middlewares/error-handler');
-
+const path = require('path');
+const fs = require('fs');
 const api = require('./api');
+const routes = require('./routes');
 
-app.use(logger());
-app.use(bodyParser());
+require('koa-csrf')(app);
 
-app.use(errorHandler);
+let middlewares = fs.readdirSync(path.join(__dirname, 'middlewares')).sort();
+
+middlewares.forEach(middleware => {
+    console.log(middleware);
+    app.use(require(`./middlewares/${middleware}`));
+});
+
+app.use(routes.routes());
 app.use(api.routes());
 
 module.exports = app;
