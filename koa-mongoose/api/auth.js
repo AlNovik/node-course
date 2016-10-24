@@ -22,6 +22,8 @@ authRouter
     .post('/logout', function*() {
         this.logout();
         this.session = null;
+        this.status = 200;
+        this.body = { success: true }
     });
 
 module.exports = authRouter;
