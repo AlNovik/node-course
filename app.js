@@ -14,7 +14,7 @@ require('koa-csrf')(app);
 let middlewares = fs.readdirSync(path.join(__dirname, 'middlewares')).sort();
 
 middlewares.forEach(middleware => {
-    app.use(require(`./middlewares/${middleware}`));
+    app.use(require(`./middlewares`));
 });
 
 app.use(routes.routes());

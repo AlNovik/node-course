@@ -1,4 +1,4 @@
-const {User} = require('../../db');
+const {User} = require('../../db/index');
 const passport = require('passport');
 
 passport.serializeUser((user, done) => done(null, user.id));

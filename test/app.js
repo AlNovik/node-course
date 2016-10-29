@@ -6,7 +6,7 @@ const request = require('request-promise').defaults({
   simple: false
 });
 
-var {User} = require('../db');
+var {User} = require('../db/index');
 
 function getURL(path) {
   return `http://localhost:3003${path}`;

@@ -1,5 +1,5 @@
 const pick = require('lodash/pick');
-const passwordUtils = require('../libs/passwordUtils');
+const passwordUtils = require('./passwordUtils');
 
 const publicFields = ['email', 'displayName'];
 
@@ -29,7 +29,21 @@ module.exports = mongoose => {
         salt: {
             type: String,
             required: true
-        }
+        },
+        gender: {
+            type: String,
+            enum: {
+                values: ['male', 'female'],
+                message: 'Неизвестное значение для пола.'
+            }
+        },
+        providers: [{
+            name: String,
+            nameId: {
+                type: String,
+                index: true
+            }
+        }]
     }, {
         timestamps: true,
         toObject: {

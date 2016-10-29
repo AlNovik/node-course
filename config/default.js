@@ -16,6 +16,20 @@ module.exports = {
             iterations: process.env.NODE_ENV === 'production' ? 12000 : 1
         }
     },
+    middlewares: [
+        'favicon',
+        'static',
+        'logger',
+        'templates',
+        'errors',
+        'mongooseSession',
+        'bodyParser',
+        'passportInitialize',
+        'passportSession',
+        'flash',
+        'csrf-check',
+        'csrf-set'
+    ],
     template: {
         root: path.join(root, 'templates')
     }
